@@ -1,19 +1,20 @@
 const welcomeVideo = document.getElementById("welcomeVideo");
 const appContainer = document.getElementById("appContainer");
 
-// Check if video was already seen in this session
+// Show container after splash video or skip if already seen
 if (sessionStorage.getItem("splashSeen")) {
   welcomeVideo.style.display = "none";
   appContainer.style.display = "flex";
 } else {
   welcomeVideo.addEventListener("ended", () => {
-    welcomeVideo.style.opacity = 0; // fade out
+    welcomeVideo.style.opacity = 0;
     setTimeout(() => {
       welcomeVideo.style.display = "none";
       appContainer.style.display = "flex";
     }, 1000);
     sessionStorage.setItem("splashSeen", "true");
   });
+
   welcomeVideo.play().catch(() => console.log("Autoplay blocked"));
 }
 
@@ -31,12 +32,12 @@ form.addEventListener("submit", async (e) => {
   const imageFile = document.getElementById("imageFile").files[0];
 
   // Simulate video generation delay
-  await new Promise((res) => setTimeout(res, 2000));
+  await new Promise(res => setTimeout(res, 2000));
 
   // Demo placeholder video
   const videoEl = document.createElement("video");
   videoEl.controls = true;
-  videoEl.src = "/welcome.mp4"; // Vite serves from public/
+  videoEl.src = "/welcome.mp4"; // replace with actual generated video
   videoContainer.appendChild(videoEl);
 
   status.textContent = "Video generated!";
