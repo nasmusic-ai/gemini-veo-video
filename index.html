@@ -1,14 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Gemini Veo Video</title>
-  </head>
-  <body>
-    <h1>Gemini Text → Video</h1>
-    <button id="generate">Generate Video</button>
-    <pre id="output"></pre>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gemini Veo Video Generator</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <!-- Splash video -->
+  <video id="welcomeVideo" autoplay muted playsinline>
+    <source src="/welcome.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
 
-    <script type="module" src="/src/main.js"></script>
-  </body>
+  <!-- Main app container -->
+  <div class="container" id="appContainer">
+    <h1>Gemini Veo Video Generator</h1>
+
+    <form id="videoForm">
+      <label>
+        Prompt (text for video):
+        <input type="text" id="prompt" required />
+      </label>
+
+      <label>
+        Optional Image (for image → video):
+        <input type="file" id="imageFile" accept="image/*" />
+      </label>
+
+      <button type="submit">Generate Video</button>
+    </form>
+
+    <p id="status"></p>
+    <div id="videoContainer"></div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
 </html>

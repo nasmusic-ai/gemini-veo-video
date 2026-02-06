@@ -1,26 +1,43 @@
-const btn = document.querySelector("#generate");
-const output = document.querySelector("#output");
+const welcomeVideo = document.getElementById("welcomeVideo");
+const appContainer = document.getElementById("appContainer");
 
-btn.onclick = async () => {
-  btn.disabled = true;
-  output.textContent = "Generating video…";
+// Check if video was already seen in this session
+if (sessionStorage.getItem("splashSeen")) {
+  welcomeVideo.style.display = "none";
+  appContainer.style.display = "flex";
+} else {
+  welcomeVideo.addEventListener("ended", () => {
+    welcomeVideo.style.opacity = 0; // fade out
+    setTimeout(() => {
+      welcomeVideo.style.display = "none";
+      appContainer.style.display = "flex";
+    }, 1000);
+    sessionStorage.setItem("splashSeen", "true");
+  });
+  welcomeVideo.play().catch(() => console.log("Autoplay blocked"));
+}
 
-  try {
-    const res = await fetch("/api/video", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        prompt: "make it dance c walk hiphop",
-        resolution: "720p",
-      }),
-    });
+// Video generator form logic
+const form = document.getElementById("videoForm");
+const status = document.getElementById("status");
+const videoContainer = document.getElementById("videoContainer");
 
-    const data = await res.json();
-    console.log("Veo response:", data);
-    output.textContent = "Request sent. Check console for response.";
-  } catch (e) {
-    output.textContent = e.message;
-  } finally {
-    btn.disabled = false;
-  }
-};
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  status.textContent = "Generating video...";
+  videoContainer.innerHTML = "";
+
+  const prompt = document.getElementById("prompt").value;
+  const imageFile = document.getElementById("imageFile").files[0];
+
+  // Simulate video generation delay
+  await new Promise((res) => setTimeout(res, 2000));
+
+  // Demo placeholder video
+  const videoEl = document.createElement("video");
+  videoEl.controls = true;
+  videoEl.src = "/welcome.mp4"; // Vite serves from public/
+  videoContainer.appendChild(videoEl);
+
+  status.textContent = "Video generated!";
+});

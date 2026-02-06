@@ -1,6 +1,8 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  root: ".",
+  base: "./",
   server: {
     watch: {
       ignored: [
@@ -9,5 +11,9 @@ export default defineConfig({
         "**/Android/**",
       ],
     },
+  },
+  build: {
+    outDir: "dist",
+    emptyOutDir: true,
   },
 });
