@@ -1,24 +1,13 @@
-const welcomeVideo = document.getElementById("welcomeVideo");
-const appContainer = document.getElementById("appContainer");
+import { generateVideo } from "./api.js";
 
-// Show container after splash video or skip if already seen
-if (sessionStorage.getItem("splashSeen")) {
-  welcomeVideo.style.display = "none";
-  appContainer.style.display = "flex";
-} else {
-  welcomeVideo.addEventListener("ended", () => {
-    welcomeVideo.style.opacity = 0;
-    setTimeout(() => {
-      welcomeVideo.style.display = "none";
-      appContainer.style.display = "flex";
-    }, 1000);
-    sessionStorage.setItem("splashSeen", "true");
-  });
+const splash = document.getElementById("welcomeVideo");
+const app = document.getElementById("app");
 
-  welcomeVideo.play().catch(() => console.log("Autoplay blocked"));
-}
+splash.addEventListener("ended", () => {
+  splash.style.display = "none";
+  app.classList.remove("hidden");
+});
 
-// Video generator form logic
 const form = document.getElementById("videoForm");
 const status = document.getElementById("status");
 const videoContainer = document.getElementById("videoContainer");
@@ -29,16 +18,14 @@ form.addEventListener("submit", async (e) => {
   videoContainer.innerHTML = "";
 
   const prompt = document.getElementById("prompt").value;
-  const imageFile = document.getElementById("imageFile").files[0];
+  const image = document.getElementById("imageFile").files[0];
 
-  // Simulate video generation delay
-  await new Promise(res => setTimeout(res, 2000));
+  const videoUrl = await generateVideo(prompt, image);
 
-  // Demo placeholder video
-  const videoEl = document.createElement("video");
-  videoEl.controls = true;
-  videoEl.src = "/welcome.mp4"; // replace with actual generated video
-  videoContainer.appendChild(videoEl);
+  const video = document.createElement("video");
+  video.src = videoUrl;
+  video.controls = true;
+  videoContainer.appendChild(video);
 
-  status.textContent = "Video generated!";
+  status.textContent = "Done!";
 });
