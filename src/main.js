@@ -1,31 +1,52 @@
 import { generateVideo } from "./api.js";
 
+/* =========================
+   Splash → App transition
+   ========================= */
 const splash = document.getElementById("welcomeVideo");
 const app = document.getElementById("app");
 
-splash.addEventListener("ended", () => {
-  splash.style.display = "none";
-  app.classList.remove("hidden");
-});
+if (splash) {
+  splash.addEventListener("ended", () => {
+    splash.style.display = "none";
+    app.classList.remove("hidden");
+  });
+}
 
+/* =========================
+   Video generation logic
+   ========================= */
 const form = document.getElementById("videoForm");
 const status = document.getElementById("status");
 const videoContainer = document.getElementById("videoContainer");
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
+
   status.textContent = "Generating video...";
   videoContainer.innerHTML = "";
 
-  const prompt = document.getElementById("prompt").value;
-  const image = document.getElementById("imageFile").files[0];
+  const prompt = document.getElementById("prompt").value.trim();
+  const image = document.getElementById("imageFile").files[0]; // (future use)
 
-  const videoUrl = await generateVideo(prompt, image);
+  if (!prompt) {
+    status.textContent = "Please enter a prompt.";
+    return;
+  }
 
-  const video = document.createElement("video");
-  video.src = videoUrl;
-  video.controls = true;
-  videoContainer.appendChild(video);
+  try {
+    const videoUrl = await generateVideo(prompt);
 
-  status.textContent = "Done!";
+    const video = document.createElement("video");
+    video.src = videoUrl;
+    video.controls = true;
+    video.autoplay = true;
+    video.playsInline = true;
+
+    videoContainer.appendChild(video);
+    status.textContent = "Video generated!";
+  } catch (err) {
+    console.error(err);
+    status.textContent = "❌ " + err.message;
+  }
 });
